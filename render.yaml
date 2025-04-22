@@ -1,0 +1,37 @@
+services:
+  cvat:
+    type: web
+    env: docker
+    dockerfile: Dockerfile
+    buildCommand: docker-compose build
+    startCommand: docker-compose up
+    envVars:
+      - key: DJANGO_MODWSGI_EXTRA_ARGS
+        value: ""
+      - key: CVAT_HOST
+        value: your-render-app-name.onrender.com
+      - key: CVAT_REDIS_URL
+        value: redis://redis:6379
+      - key: CVAT_POSTGRES_HOST
+        value: postgres
+      - key: CVAT_POSTGRES_USER
+        value: cvat
+      - key: CVAT_POSTGRES_PASSWORD
+        generateValue: true
+      - key: CVAT_POSTGRES_DB
+        value: cvat
+      - key: CVAT_SHARE_URL
+        value: /home/django/share
+    healthCheckPath: /api/server/about
+    plan: free
+    numInstances: 1
+
+  redis:
+    type: redis
+    plan: free
+
+  postgres:
+    type: pg
+    plan: free
+    databaseName: cvat
+    user: cvat
